@@ -1,0 +1,4 @@
+services:
+  ros2_lecture_jazzy_lxqt:
+    environment:
+      - DISPLAY=:1

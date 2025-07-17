@@ -1,0 +1,21 @@
+services:
+  ros2_lecture_jazzy_lxqt:
+    container_name: ros2_lecture_jazzy_lxqt
+    image: kmiyawaki20/ros2_jazzy_lxqt:202507
+    volumes:
+      - ubuntu:/home/ubuntu
+      - ./share/data:/home/ubuntu/data
+    ports:
+      - "6080:80"
+      - "5901:5901"
+    environment:
+      - USER=ubuntu
+      - TZ=Asia/Tokyo
+      - NO_AT_BRIDGE=1
+    tty: true
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+volumes:
+  ubuntu:

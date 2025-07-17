@@ -1,0 +1,5 @@
+share/*
+!share/.gitkeep
+*.code-workspace
+start_all.bat
+docker-compose.override.yaml

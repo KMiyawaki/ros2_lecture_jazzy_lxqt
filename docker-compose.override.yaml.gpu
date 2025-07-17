@@ -1,0 +1,10 @@
+services:
+  ros2_lecture_jazzy:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [all]
+              

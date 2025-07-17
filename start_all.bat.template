@@ -1,0 +1,47 @@
+@echo off
+
+set "VNCVIEWER=C:\Program Files\RealVNC\VNC Viewer\vncviewer.exe"
+set "VNCCONFIG=127.0.0.1-5901.vnc"
+set "CONTAINER_NAME=ros2_lecture_jazzy_lxqt"
+set "WORKSPACE=container.code-workspace"
+
+cd /d "%~dp0"
+
+docker info >nul 2>nul 
+
+if %errorlevel% equ 0 (
+    echo Docker Desktop と接続できました。
+) else (
+    echo ERROR: Docker Desktop と接続できませんでした。
+    echo Docker Desktop が起動しているかどうかを確認してください。
+    pause
+    exit 1
+)
+
+if not exist %WORKSPACE% (
+    copy "%WORKSPACE%.template" %WORKSPACE%
+    if errorlevel 1 (
+        echo ERROR: %WORKSPACE%.template のコピーに失敗しました。フォルダの書き込み権限を確認してください。
+        pause
+        exit 1
+    )
+    echo %WORKSPACE%.template をコピーしました。
+)
+
+docker ps -f "name=%CONTAINER_NAME%" --format "{{.Names}}" | findstr /i "%CONTAINER_NAME%" >nul
+
+if %errorlevel% equ 0 (
+    echo コンテナ '%CONTAINER_NAME%' は起動済みです。
+) else (
+    echo コンテナ '%CONTAINER_NAME%' を起動します。
+    start "%CONTAINER_NAME%" docker-compose up
+    echo コンテナ '%CONTAINER_NAME%' の起動を待っています。
+    timeout /t 5 /nobreak >nul
+)
+
+@echo on
+echo VSCodeで %WORKSPACE% を開きます。
+call code ".\%WORKSPACE%"
+
+echo %VNCVIEWER% で %VNCCONFIG% を開きます。
+start "VNC" "%VNCVIEWER%" -config ".\%VNCCONFIG%"
