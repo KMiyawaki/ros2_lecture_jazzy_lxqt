@@ -1,10 +1,13 @@
 services:
   ros2_lecture_jazzy_lxqt:
     container_name: ros2_lecture_jazzy_lxqt
-    image: kmiyawaki20/ros2_jazzy_lxqt:202507
+    image: kmiyawaki20/ros2_jazzy_lxqt:202604
+    devices:
+      - /dev/dxg:/dev/dxg
     volumes:
       - ubuntu:/home/ubuntu
       - ./share/data:/home/ubuntu/data
+      - /usr/lib/wsl:/usr/lib/wsl
     ports:
       - "6080:80"
       - "5901:5901"
@@ -13,9 +16,5 @@ services:
       - TZ=Asia/Tokyo
       - NO_AT_BRIDGE=1
     tty: true
-    deploy:
-      resources:
-        limits:
-          cpus: '4'
 volumes:
   ubuntu:
