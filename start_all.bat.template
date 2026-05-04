@@ -2,6 +2,7 @@
 
 set "VNCVIEWER=C:\Program Files\RealVNC\VNC Viewer\vncviewer.exe"
 set "VNCCONFIG=127.0.0.1-5901.vnc"
+set "TARGET_IMAGE=kmiyawaki20/ros2_jazzy_lxqt"
 set "CONTAINER_NAME=ros2_lecture_jazzy_lxqt"
 set "WORKSPACE=container.code-workspace"
 
@@ -17,6 +18,21 @@ if %errorlevel% equ 0 (
     pause
     exit 1
 )
+
+docker images --format "{{.Repository}}:{{.Tag}}" | findstr /c:"%TARGET_IMAGE%" >nul
+if %errorlevel% equ 0 goto :IMAGE_READY
+
+echo イメージ '%TARGET_IMAGE%' が見つかりませんでした。
+echo ダウンロード（pull）を開始します...
+docker-compose pull
+if %errorlevel% neq 0 (
+    echo ERROR: ダウンロードに失敗しました。
+    pause
+    exit 1
+)
+
+:IMAGE_READY
+echo イメージ '%TARGET_IMAGE%' の準備は完了しています。
 
 if not exist %WORKSPACE% (
     copy "%WORKSPACE%.template" %WORKSPACE%
@@ -44,4 +60,7 @@ echo VSCodeで %WORKSPACE% を開きます。
 call code ".\%WORKSPACE%"
 
 echo %VNCVIEWER% で %VNCCONFIG% を開きます。
-start "VNC" "%VNCVIEWER%" -config ".\%VNCCONFIG%"
+start "" /b "%VNCVIEWER%" -config ".\%VNCCONFIG%"
+timeout /t 1 >nul
+
+exit

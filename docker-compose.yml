@@ -15,6 +15,7 @@ services:
       - USER=ubuntu
       - TZ=Asia/Tokyo
       - NO_AT_BRIDGE=1
+      - DISPLAY=:1
     tty: true
 volumes:
   ubuntu:

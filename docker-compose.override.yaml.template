@@ -2,7 +2,6 @@ services:
   ros2_lecture_jazzy_lxqt:
     privileged: true
     environment:
-      - DISPLAY=:1
       - GALLIUM_DRIVER=d3d12
     deploy:
       resources:
